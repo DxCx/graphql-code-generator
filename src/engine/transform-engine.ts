@@ -1,4 +1,4 @@
-import {IntrospectionQuery} from 'graphql/utilities/introspectionQuery';
+import {IntrospectionQuery} from 'graphql';
 import {loadSchema} from '../loaders/scheme-loader';
 import {prepareCodegen} from './codegen';
 import {loadDocumentsSources} from '../loaders/document-loader';

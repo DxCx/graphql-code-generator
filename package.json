@@ -18,7 +18,7 @@
     "dev": "cd dist/cli && nodemon --ext ts,js,d.ts,template,graphql,json,handlebars gql-gen.js --dev --file ../../dev-test/githunt/schema.json --template ts --out ../../dev-test/githunt/typings.d.ts  ../../dev-test/githunt/**/*.graphql",
     "prepare": "npm run build && npm run test && npm run create-git-tag && git push && git push --tags",
     "test": "jest",
-    "prepublish": "npm run build"
+    "postinstall": "npm run build"
   },
   "repository": {
     "type": "git",

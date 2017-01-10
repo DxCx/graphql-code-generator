@@ -1,9 +1,23 @@
-import {DocumentNode, Source, parse, concatAST} from 'graphql';
+import {Document, Source, parse} from 'graphql';
 import * as fs from 'fs';
 import * as path from 'path';
 import {extractDocumentStringFromCodeFile} from '../utils/document-finder';
 
-export const loadFileContent = (filePath: string): DocumentNode | null => {
+function concatAST(asts: Array<Document>): Document {
+  const batchDefinitions = [];
+  for (let i = 0; i < asts.length; i++) {
+    const definitions = asts[i].definitions;
+    for (let j = 0; j < definitions.length; j++) {
+      batchDefinitions.push(definitions[j]);
+    }
+  }
+  return {
+    kind: 'Document',
+    definitions: batchDefinitions,
+  };
+}
+
+export const loadFileContent = (filePath: string): Document | null => {
   if (fs.existsSync(filePath)) {
     const fileContent = fs.readFileSync(filePath, 'utf8');
     const fileExt = path.extname(filePath);
@@ -25,6 +39,6 @@ export const loadFileContent = (filePath: string): DocumentNode | null => {
   }
 };
 
-export const loadDocumentsSources = (filePaths: string[]): DocumentNode => {
-  return concatAST(filePaths.map<DocumentNode>(loadFileContent).filter(content => content));
+export const loadDocumentsSources = (filePaths: string[]): Document => {
+  return concatAST(filePaths.map<Document>(loadFileContent).filter(content => content));
 };

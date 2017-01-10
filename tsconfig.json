@@ -13,7 +13,7 @@
     "outDir": "./dist",
     "rootDir": "./src",
     "types": [
-      "@types/graphql",
+      "typed-graphql",
       "@types/node",
       "@types/commander",
       "@types/glob",

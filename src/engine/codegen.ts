@@ -1,6 +1,6 @@
 import {GraphQLSchema} from 'graphql';
 import {Codegen, Model, CodegenDocument} from '../models/interfaces';
-import {GraphQLNamedType, DefinitionNode, DocumentNode, Kind} from 'graphql';
+import {Kind, GraphQLNamedType, Definition, Document} from 'graphql';
 import {handleType} from '../handlers/model-handler';
 import {handleOperation} from '../handlers/operation-handler';
 import {handleFragment} from '../handlers/fragment-handler';
@@ -12,19 +12,19 @@ export interface CodegenConfig {
 }
 
 export const prepareCodegen = (schema: GraphQLSchema,
-                               document: DocumentNode,
+                               document: Document,
                                primitivesMap: any = {},
                                config: CodegenConfig = {}): Codegen => {
   let models: Model[] = [];
   let documents: CodegenDocument[] = [];
-  let typesMap: GraphQLNamedType = schema.getTypeMap();
+  let typesMap: GraphQLNamedType = schema.getTypeMap() as any;
 
   Object.keys(typesMap).forEach(typeName => {
     models.push(...handleType(schema, primitivesMap, typesMap[typeName]));
   });
 
   if (!config.noDocuments) {
-    document.definitions.forEach((definition: DefinitionNode) => {
+    document.definitions.forEach((definition: Definition) => {
       switch (definition.kind) {
         case Kind.OPERATION_DEFINITION:
           documents.push(handleOperation(schema, definition, primitivesMap, config.flattenInnerTypes));
@@ -39,7 +39,6 @@ export const prepareCodegen = (schema: GraphQLSchema,
       }
     });
   }
-
 
   return <Codegen>{
     models: models.filter(item => {
